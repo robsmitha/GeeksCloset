@@ -9,12 +9,9 @@ declare module 'vue' {
   export interface GlobalComponents {
     AboutMe: typeof import('./src/components/AboutMe.vue')['default']
     CardList: typeof import('./src/components/CardList.vue')['default']
-    CreateCardDialog: typeof import('./src/components/CreateCardDialog.vue')['default']
     Features: typeof import('./src/components/Features.vue')['default']
     FindCard: typeof import('./src/components/FindCard.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    MyResume: typeof import('./src/components/MyResume.vue')['default']
-    OAuthCallback: typeof import('./src/components/OAuthCallback.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaveCardDialog: typeof import('./src/components/SaveCardDialog.vue')['default']

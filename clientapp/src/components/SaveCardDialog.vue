@@ -1,0 +1,196 @@
+<template>
+    <v-dialog
+      v-model="dialog"
+      scrollable
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
+      <v-card>
+        <v-toolbar color="black">
+            <v-btn
+                icon="mdi-close"
+                @click="dialog = false"
+            ></v-btn>
+            <v-toolbar-title>
+                <span class="font-weight-medium">{{ item?.cardId ? 'Modify' : 'New' }} Card</span>
+            </v-toolbar-title>
+
+            <v-btn
+                @click="onSave"
+            >
+              Save
+            </v-btn>
+        </v-toolbar>
+        <v-card-text class="pa-0">
+            <template v-if="loading">
+                <v-skeleton-loader color="grey-lighten-4 pa-0" type="paragraph">
+                </v-skeleton-loader>
+            </template>
+            <template v-else>
+                <v-container fluid>
+                  <v-row>
+                    <v-col>
+                      <span class="text-subtitle-1 text-grey-darken-2 text-uppercase d-block mb-2">Details</span>
+                      <v-divider />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field 
+                        v-model="form.name"
+                        label="Name"
+                        required
+                        variant="outlined"
+                        hint="Use a recognizable name for the card.">
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="6">
+                      <v-text-field 
+                        v-model="form.serialNumber" 
+                        label="Serial Number" 
+                        variant="outlined"
+                        hint="Cards must have a unique serial number."
+                        required>
+                      </v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-text-field 
+                        v-model="form.grade" 
+                        label="Grade" 
+                        variant="outlined"
+                        hint="Enter the grade of the card.">
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="pt-0">
+                      <span class="text-subtitle-1 text-grey-darken-2 text-uppercase d-block mb-2">Notes</span>
+                      <v-divider />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-textarea
+                        v-model="form.description" 
+                        label="Enter note" 
+                        variant="outlined"
+                        auto-grow
+                        rows="3"
+                        hint="Generic notes about this card. You can add notes after the card is created.">
+                      </v-textarea>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="pt-0">
+                      <span class="text-subtitle-1 text-grey-darken-2 text-uppercase d-block mb-2">Images</span>
+                      <v-divider />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-file-input
+                        v-model="form.files"
+                        label="Add Files"
+                        counter
+                        multiple
+                        show-size
+                        clearable
+                        variant="outlined"
+                        chips
+                        hint="Add pictures of the graded card. These will display on the site when searched by serial number."
+                        persistent-hint
+                      ></v-file-input>
+                    </v-col>
+                  </v-row>
+                  <v-row v-if="form.images?.length > 0">
+                    <v-col>
+                      <v-chip 
+                          v-for="i in form.images" 
+                          :key="i.CardImageId"
+                          class="mr-2 mb-2"
+                          closable
+                          label
+                          color="primary"
+                          @click:close="onDeleteImage(i.CardImageId)"
+                        >
+                        {{ i.FileName }}
+                      </v-chip>
+                    </v-col>
+                  </v-row>
+                </v-container>
+            </template>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+</template>
+
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+
+const props = defineProps(['open', 'loading', 'item'])
+const emit = defineEmits(['close', 'save', 'delete-image'])
+
+const form = ref({
+  cardId: null,
+  name: '',
+  description: '',
+  serialNumber: '',
+  grade: '',
+  images: [] as any,
+  files: [] as File[]
+})
+
+const dialog = computed({
+  get() {
+    return props.open
+  },
+  set(newValue) {
+    if(!newValue) {
+        emit('close')
+    }
+  }
+})
+watch(() => props.open, (newValue: any) => {
+  if(!newValue){
+    form.value = {
+      cardId: null,
+      name: '',
+      description: '',
+      serialNumber: '',
+      grade: '',
+      images: [] as any,
+      files: [] as File[]
+    }
+  }
+}, {
+  immediate: true
+})
+
+watch(() => props.item, (newValue: any) => {
+  if(newValue){
+    form.value = {
+      cardId: props.item?.cardId ?? null,
+      name: props.item?.name ?? '',
+      description: props.item?.description ??'',
+      serialNumber: props.item?.serialNumber ??'',
+      grade: props.item?.grade ?? '',
+      images: props.item?.images ?? [] as any,
+      files: [] as File[]
+    }
+  }
+}, {
+  immediate: true
+})
+
+function onSave(){
+  emit('save', form.value)
+}
+
+function onDeleteImage(cardImageId: number){
+  const updatedImages = form.value.images.filter((i: any) => i.CardImageId !== cardImageId);
+  form.value.images = updatedImages
+  emit('delete-image', cardImageId)
+}
+</script>

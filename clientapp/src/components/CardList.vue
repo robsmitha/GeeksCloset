@@ -74,7 +74,7 @@
                                         {{ new Date(getNestedValue(item, header.key)).toLocaleDateString() }}
                                     </template>
                                     <template v-else>
-                                        {{ getNestedValue(item, header.key) }}
+                                        {{ getNestedValue(item, header.key!.toString()) }}
                                     </template>
                                 </td>
                             </tr>
@@ -88,11 +88,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const props = defineProps(['items'])
+import type { VDataTable } from 'vuetify/components'
+
+type ReadonlyHeaders = VDataTable['$props']['headers']
+
+const props = defineProps({
+    items: { type: Array<any> }
+})
 const emit = defineEmits(['view', 'create', 'delete', 'edit'])
 const search = ref('')
 
-const headers = [
+const headers: ReadonlyHeaders = [
     {
         title: 'Name',
         key: 'Name',
@@ -121,7 +127,7 @@ const headers = [
     }
 ]
 
-function filter (value, query, item) {
+function filter (value: string, query: string, item: any) {
     const upperCaseQuery = query.toLocaleUpperCase()
     return value != null &&
         upperCaseQuery != null &&

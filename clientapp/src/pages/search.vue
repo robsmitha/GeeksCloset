@@ -55,7 +55,12 @@ async function searchBySerialNumber(){
         router.replace({ path: '/search' })
     }
     loading.value = true
-    const response = await fetch(`/api/GetCardBySerialNumber?serialNumber=${term.value}`)
+    const response = await fetch(`/api/GetProductBySerialNumber?serialNumber=${term.value}`, {
+        method: 'get',
+        headers: {
+            '___tenant___': 'geekscloset'
+        }
+    })
     if(!response.ok){
         switch (response.status) {
             case 400:
@@ -72,8 +77,8 @@ async function searchBySerialNumber(){
     }
 
     const data = await response.json()
-    card.value = data.card
-    sasUris.value = data.sasUris
+    card.value = data.product
+    sasUris.value = data.imageUris
     loading.value = false
 }
 </script>

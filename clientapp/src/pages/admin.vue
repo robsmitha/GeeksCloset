@@ -57,7 +57,12 @@ watch(dialog, (newValue) => {
 })
 
 async function getCards(){
-    const response = await fetch('/api/GetCards')
+    const response = await fetch('/api/GetProducts', {
+        method: 'get',
+        headers: {
+            '___tenant___': 'geekscloset'
+        }
+    })
     
     if(!response.ok){
         switch (response.status) {
@@ -72,15 +77,20 @@ async function getCards(){
     cards.value = data
 }
 
-function viewCard(cardId: number) {
-    router.push(`/search/${cardId}`)
+function viewCard(serialNumber: string) {
+    router.push(`/search/${serialNumber}`)
 }
 
-async function editCard(cardId: number) {
+async function editCard(productId: number) {
     dialogLoading.value = true
     dialog.value = true
 
-    const response = await fetch(`/api/GetCard?cardId=${cardId}`)
+    const response = await fetch(`/api/GetProduct?productId=${productId}`, {
+        method: 'get',
+        headers: {
+            '___tenant___': 'geekscloset'
+        }
+    })
     if(!response.ok){
         switch (response.status) {
             default:
@@ -92,23 +102,24 @@ async function editCard(cardId: number) {
 
     const data = await response.json()
     selectedCard.value = {
-        cardId: data.card.CardId,
-        name: data.card.Name,
-        description: data.card.Description,
-        serialNumber: data.card.SerialNumber,
-        grade: data.card.Grade,
+        productId: data.product.productId,
+        name: data.product.name,
+        description: data.product.description,
+        serialNumber: data.product.serialNumber,
+        grade: data.product.grade,
         images: data.images
     }
     dialogLoading.value = false
 }
 
-async function deleteCard(cardId: number) {
-    const response = await fetch('/api/DeleteCard', {
+async function deleteCard(productId: number) {
+    const response = await fetch('/api/DeleteProduct', {
         method: 'post',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            '___tenant___': 'geekscloset'
         },
-        body: JSON.stringify({ cardId })
+        body: JSON.stringify({ productId })
     })
     
     if(!response.ok){
@@ -126,14 +137,15 @@ async function deleteCard(cardId: number) {
     }
 }
 
-async function deleteCardImage(cardImageId: number){
+async function deleteCardImage(productImageId: number){
     dialogLoading.value = true
-    const response = await fetch('/api/DeleteCardImage', {
+    const response = await fetch('/api/DeleteProductImage', {
         method: 'post',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            '___tenant___': 'geekscloset'
         },
-        body: JSON.stringify({ cardImageId })
+        body: JSON.stringify({ productImageId })
     })
     
     if(!response.ok){
@@ -154,7 +166,12 @@ async function deleteCardImage(cardImageId: number){
 }
 
 async function uploadFile(file: File) {
-    const response = await fetch(`/api/GenerateSasToken?fileName=${file.name}`)
+    const response = await fetch(`/api/GenerateSasToken?fileName=${file.name}`, {
+        method: 'get',
+        headers: {
+            '___tenant___': 'geekscloset'
+        }
+    })
     
     if(!response.ok){
         switch (response.status) {
@@ -188,13 +205,14 @@ async function saveCard(form: any) {
         const image = await uploadFile(form.files[i])
         image && images.push(image)
     }
-    const response = await fetch('/api/SaveCard', {
+    const response = await fetch('/api/SaveProduct', {
         method: 'post',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            '___tenant___': 'geekscloset'
         },
         body: JSON.stringify({
-            cardId: form.cardId,
+            productId: form.productId,
             name: form.name,
             description: form.description,
             serialNumber: form.serialNumber,
@@ -217,7 +235,7 @@ async function saveCard(form: any) {
     dialog.value = false
 
     const data = await response.json()
-    if (data.CardId) {
+    if (data.productId) {
         await getCards()
     }
 }

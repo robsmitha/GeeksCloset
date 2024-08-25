@@ -12,7 +12,7 @@
                 @click="dialog = false"
             ></v-btn>
             <v-toolbar-title>
-                <span class="font-weight-medium">{{ item?.cardId ? 'Modify' : 'New' }} Card</span>
+                <span class="font-weight-medium">{{ item?.productId ? 'Modify' : 'New' }} Card</span>
             </v-toolbar-title>
 
             <v-btn
@@ -108,12 +108,12 @@
                     <v-col>
                       <v-chip 
                           v-for="i in form.images" 
-                          :key="i.CardImageId"
+                          :key="i.productImageId"
                           class="mr-2 mb-2"
                           closable
                           label
                           color="primary"
-                          @click:close="onDeleteImage(i.CardImageId)"
+                          @click:close="onDeleteImage(i.productImageId)"
                         >
                         {{ i.FileName }}
                       </v-chip>
@@ -133,7 +133,7 @@ const props = defineProps(['open', 'loading', 'item'])
 const emit = defineEmits(['close', 'save', 'delete-image'])
 
 const form = ref({
-  cardId: null,
+  productId: null,
   name: '',
   description: '',
   serialNumber: '',
@@ -155,7 +155,7 @@ const dialog = computed({
 watch(() => props.open, (newValue: any) => {
   if(!newValue){
     form.value = {
-      cardId: null,
+      productId: null,
       name: '',
       description: '',
       serialNumber: '',
@@ -171,7 +171,7 @@ watch(() => props.open, (newValue: any) => {
 watch(() => props.item, (newValue: any) => {
   if(newValue){
     form.value = {
-      cardId: props.item?.cardId ?? null,
+      productId: props.item?.productId ?? null,
       name: props.item?.name ?? '',
       description: props.item?.description ??'',
       serialNumber: props.item?.serialNumber ??'',
@@ -188,9 +188,9 @@ function onSave(){
   emit('save', form.value)
 }
 
-function onDeleteImage(cardImageId: number){
-  const updatedImages = form.value.images.filter((i: any) => i.CardImageId !== cardImageId);
+function onDeleteImage(productImageId: number){
+  const updatedImages = form.value.images.filter((i: any) => i.productImageId !== productImageId);
   form.value.images = updatedImages
-  emit('delete-image', cardImageId)
+  emit('delete-image', productImageId)
 }
 </script>

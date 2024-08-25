@@ -14,15 +14,15 @@
             <v-row>
                 <v-col>
                     <span class="d-block">
-                        {{ cardDetails?.Name }}
+                        {{ cardDetails?.name }}
                     </span>
-                    <span class="d-block text-grey-darken-1">#{{ cardDetails?.SerialNumber }}</span>
+                    <span class="d-block text-grey-darken-1">#{{ cardDetails?.serialNumber }}</span>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col>
                     
-                    <v-chip><span>Grade: </span>{{ cardDetails?.Grade }}</v-chip>
+                    <v-chip><span>Grade: </span>{{ cardDetails?.grade }}</v-chip>
                 </v-col>
             </v-row>
             <v-row>
@@ -31,7 +31,7 @@
                         Notes:
                     </span>
                     <span class="d-block">
-                        {{ cardDetails?.Description }}
+                        {{ cardDetails?.description }}
                     </span>
                 </v-col>
             </v-row>

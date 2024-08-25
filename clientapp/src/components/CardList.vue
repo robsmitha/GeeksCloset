@@ -48,21 +48,21 @@
                             <tr>
                                 <td v-for="header in headers" :key="header.key">
                                     <template v-if="header.key === ''">
-                                        <v-btn variant="text" size="small" icon @click="$emit('view', item?.CardId)">
+                                        <v-btn variant="text" size="small" icon @click="$emit('view', item?.serialNumber)">
                                             <v-icon
                                                 size="small"
                                             >
                                                 mdi-eye
                                             </v-icon>
                                         </v-btn>
-                                        <v-btn variant="text" size="small" icon @click="$emit('edit', item?.CardId)">
+                                        <v-btn variant="text" size="small" icon @click="$emit('edit', item?.productId)">
                                             <v-icon
                                                 size="small"
                                             >
                                                 mdi-pencil
                                             </v-icon>
                                         </v-btn>
-                                        <v-btn variant="text" size="small" icon @click="$emit('delete', item?.CardId)">
+                                        <v-btn variant="text" size="small" icon @click="$emit('delete', item?.productId)">
                                             <v-icon
                                                 size="small"
                                             >
@@ -101,23 +101,23 @@ const search = ref('')
 const headers: ReadonlyHeaders = [
     {
         title: 'Name',
-        key: 'Name',
+        key: 'name',
     },
     {
         title: 'Serial #',
-        key: 'SerialNumber',
+        key: 'serialNumber',
     },
     {
         title: 'Grade',
-        key: 'Grade',
+        key: 'grade',
     },
     {
         title: 'Description',
-        key: 'Description',
+        key: 'description',
     },
     {
         title: 'Modified',
-        key: 'ModifiedAt'
+        key: 'modifiedAt'
     },
     {
         title: '',

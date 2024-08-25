@@ -39,6 +39,7 @@
         <v-list-item :subtitle="auth.signedIn ? auth.userDetails : 'Administration'"></v-list-item>
         <template v-if="auth.signedIn">
           <v-list-item prepend-icon="mdi-cards-outline" title="GCG Cards" href="/admin"></v-list-item>
+          <!-- <v-list-item prepend-icon="mdi-nuke" title="Remove Personal Data" href="/.auth/purge/aad"></v-list-item> -->
           <v-list-item prepend-icon="mdi-logout" title="Sign out" href="/.auth/logout"></v-list-item>
         </template>
         <v-list-item v-else prepend-icon="mdi-login" title="Sign in" href="/.auth/login/aad"></v-list-item>

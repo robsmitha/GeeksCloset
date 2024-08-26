@@ -30,7 +30,7 @@ var host = new HostBuilder()
 
         services.AddAzureStorageFeatures(hostContext.Configuration);
 
-        services.AddApplication(Assembly.GetExecutingAssembly());
+        services.AddApplication();
     })
     .ConfigureFunctionsWorkerDefaults(builder =>
     {

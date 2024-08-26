@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './Elysian' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './server' # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:
@@ -27,6 +27,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: ${{ secrets.NUGET_URL }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.READ_REPO_TOKEN }}
 
       - name: 'Resolve Project Dependencies Using Dotnet'
         shell: pwsh

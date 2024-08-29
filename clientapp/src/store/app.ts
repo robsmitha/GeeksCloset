@@ -1,6 +1,7 @@
 // Utilities
 import { defineStore } from 'pinia'
 import { WpPage, WpPost, WpTag, WpCategory } from './types'
+import apiClient from '@/api/elysianClient'
 
 type State = {
   pages: WpPage[]
@@ -17,18 +18,13 @@ export const useAppStore = defineStore('app', {
   },
   actions: {
     async fetchContent(): Promise<void> {
-      const response = await fetch('/api/WordPressContent', {
-        method: 'get',
-        headers: {
-            '___tenant___': 'geekscloset'
-        }
-    });
-      if (!response.ok){
+      const response = await apiClient.getData('/api/WordPressContent')
+      if (!response.success){
         console.error("Failed to get page content.")
         return
       }
-      const data = await response.json()
-      this.pages = data.pages
+      
+      this.pages = response.data.pages
     }
   }
 })

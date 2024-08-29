@@ -41,15 +41,26 @@ namespace ElysianFunctions.Middleware
 
                     switch (ex)
                     {
-                        case CustomValidationException validationException:
+                        case CustomValidationException validationException when validationException.Errors.Any():
                             code = HttpStatusCode.BadRequest;
                             result = JsonConvert.SerializeObject(
                                 validationException.Errors);
                             break;
+                        case CustomValidationException validationException:
+                            code = HttpStatusCode.BadRequest;
+                            result = JsonConvert.SerializeObject(
+                                new Dictionary<string, string[]>
+                                {
+                                    { "GENERAL_BAD_REQUEST", [validationException.Message ?? "The request was not formatted correctly."] }
+                                });
+                            break;
                         case FinancialServiceException financialServiceException:
                             code = HttpStatusCode.BadRequest;
                             result = JsonConvert.SerializeObject(
-                                financialServiceException.Error);
+                                new Dictionary<string, string[]>
+                                {
+                                    { "FINANCIAL_BAD_REQUEST", [financialServiceException.Error.error_message] }
+                                });
                             break;
                         case NotFoundException _:
                             code = HttpStatusCode.NotFound;

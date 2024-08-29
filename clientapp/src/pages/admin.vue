@@ -36,6 +36,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BlobServiceClient } from '@azure/storage-blob'
+import apiClient from '@/api/elysianClient'
 
 const router = useRouter()
 const dialog = ref(false)
@@ -57,15 +58,10 @@ watch(dialog, (newValue) => {
 })
 
 async function getCards(){
-    const response = await fetch('/api/GetProducts', {
-        method: 'get',
-        headers: {
-            '___tenant___': 'geekscloset'
-        }
-    })
+    const response = await apiClient.getData('/api/GetProducts')
     
-    if(!response.ok){
-        switch (response.status) {
+    if(!response.success){
+        switch (response.statusCode) {
             default:
                 errorMessage.value = 'Error getting cards. Please try again later.'
                 break
@@ -73,8 +69,7 @@ async function getCards(){
         snackbar.value = true
     }
 
-    const data = await response.json()
-    cards.value = data
+    cards.value = response.data
 }
 
 function viewCard(serialNumber: string) {
@@ -85,14 +80,9 @@ async function editCard(productId: number) {
     dialogLoading.value = true
     dialog.value = true
 
-    const response = await fetch(`/api/GetProduct?productId=${productId}`, {
-        method: 'get',
-        headers: {
-            '___tenant___': 'geekscloset'
-        }
-    })
-    if(!response.ok){
-        switch (response.status) {
+    const response = await apiClient.getData(`/api/GetProduct?productId=${productId}`)
+    if(!response.success){
+        switch (response.statusCode) {
             default:
                 errorMessage.value = 'Error getting card. Please try again later.'
                 break
@@ -100,7 +90,7 @@ async function editCard(productId: number) {
         snackbar.value = true
     }
 
-    const data = await response.json()
+    const data = response.data
     selectedCard.value = {
         productId: data.product.productId,
         name: data.product.name,
@@ -113,17 +103,10 @@ async function editCard(productId: number) {
 }
 
 async function deleteCard(productId: number) {
-    const response = await fetch('/api/DeleteProduct', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            '___tenant___': 'geekscloset'
-        },
-        body: JSON.stringify({ productId })
-    })
+    const response = await apiClient.postData('/api/DeleteProduct', { productId })
     
-    if(!response.ok){
-        switch (response.status) {
+    if(!response.success){
+        switch (response.statusCode) {
             default:
                 errorMessage.value = 'Could not delete card'
                 break
@@ -131,25 +114,17 @@ async function deleteCard(productId: number) {
         snackbar.value = true
     }
 
-    const data = await response.json()
-    if (data.success) {
+    if (response.data.success) {
         await getCards()
     }
 }
 
 async function deleteCardImage(productImageId: number){
     dialogLoading.value = true
-    const response = await fetch('/api/DeleteProductImage', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            '___tenant___': 'geekscloset'
-        },
-        body: JSON.stringify({ productImageId })
-    })
+    const response = await apiClient.postData('/api/DeleteProductImage', { productImageId })
     
-    if(!response.ok){
-        switch (response.status) {
+    if(!response.success){
+        switch (response.statusCode) {
             default:
                 errorMessage.value = 'Could not delete card image'
                 break
@@ -158,23 +133,17 @@ async function deleteCardImage(productImageId: number){
     }
     dialogLoading.value = false
 
-    const data = await response.json()
-    if (!data.success) {
+    if (!response.data.success) {
         errorMessage.value = 'Could not delete card'
         snackbar.value = true
     }
 }
 
 async function uploadFile(file: File) {
-    const response = await fetch(`/api/GenerateSasToken?fileName=${file.name}`, {
-        method: 'get',
-        headers: {
-            '___tenant___': 'geekscloset'
-        }
-    })
+    const response = await apiClient.getData(`/api/GenerateSasToken?fileName=${file.name}`)
     
-    if(!response.ok){
-        switch (response.status) {
+    if(!response.success){
+        switch (response.statusCode) {
             default:
                 errorMessage.value = 'Could not upload file'
                 break
@@ -183,7 +152,7 @@ async function uploadFile(file: File) {
         return null
     }
 
-    const data = await response.json()
+    const data = response.data
 
     const blobServiceClient = new BlobServiceClient(`https://${data.accountName}.blob.core.windows.net?${data.sasToken}`);
     
@@ -205,24 +174,17 @@ async function saveCard(form: any) {
         const image = await uploadFile(form.files[i])
         image && images.push(image)
     }
-    const response = await fetch('/api/SaveProduct', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            '___tenant___': 'geekscloset'
-        },
-        body: JSON.stringify({
-            productId: form.productId,
-            name: form.name,
-            description: form.description,
-            serialNumber: form.serialNumber,
-            grade: form.grade,
-            addImages: images
-        })
+    const response = await apiClient.postData('/api/SaveProduct', {
+        productId: form.productId,
+        name: form.name,
+        description: form.description,
+        serialNumber: form.serialNumber,
+        grade: form.grade,
+        addImages: images
     })
     
-    if(!response.ok){
-        switch (response.status) {
+    if(!response.success){
+        switch (response.statusCode) {
             default:
                 errorMessage.value = 'Could not save card'
                 break
@@ -234,8 +196,7 @@ async function saveCard(form: any) {
     dialogLoading.value = false
     dialog.value = false
 
-    const data = await response.json()
-    if (data.productId) {
+    if (response.data.productId) {
         await getCards()
     }
 }

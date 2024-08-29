@@ -30,6 +30,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import apiClient from '@/api/elysianClient'
 
 const router = useRouter()
 
@@ -55,14 +56,9 @@ async function searchBySerialNumber(){
         router.replace({ path: '/search' })
     }
     loading.value = true
-    const response = await fetch(`/api/GetProductBySerialNumber?serialNumber=${term.value}`, {
-        method: 'get',
-        headers: {
-            '___tenant___': 'geekscloset'
-        }
-    })
-    if(!response.ok){
-        switch (response.status) {
+    const response = await apiClient.getData(`/api/GetProductBySerialNumber?serialNumber=${term.value}`)
+    if(!response.success){
+        switch (response.statusCode) {
             case 400:
                 errorMessage.value = 'Please provide a serial number to search.'
                 break
@@ -76,9 +72,8 @@ async function searchBySerialNumber(){
         snackbar.value = true
     }
 
-    const data = await response.json()
-    card.value = data.product
-    sasUris.value = data.imageUris
+    card.value = response.data.product
+    sasUris.value = response.data.imageUris
     loading.value = false
 }
 </script>

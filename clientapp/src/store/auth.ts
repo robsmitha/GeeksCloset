@@ -1,6 +1,7 @@
 // Utilities
 import { defineStore } from 'pinia'
 import { ClaimsIdentity } from './types'
+import apiClient from '@/api/elysianClient'
 
 type State = {
   userDetails: string | undefined,
@@ -21,13 +22,13 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async fetchAuth(): Promise<void> {
-      const response = await fetch('/.auth/me');
-      if (!response.ok){
+      const response = await apiClient.getData('/.auth/me');
+      if (!response.success){
         console.error("Failed to get auth me.")
         return
       }
 
-      const identity: ClaimsIdentity = await response.json()
+      const identity: ClaimsIdentity = response.data
       this.identity = identity
       if (identity?.clientPrincipal) {
         this.userDetails = identity.clientPrincipal.userDetails

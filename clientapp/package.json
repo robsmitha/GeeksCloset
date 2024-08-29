@@ -10,6 +10,8 @@
   "dependencies": {
     "@azure/storage-blob": "^12.24.0",
     "@mdi/font": "7.0.96",
+    "@types/axios": "^0.14.0",
+    "axios": "^1.7.5",
     "core-js": "^3.34.0",
     "highlight.js": "^11.9.0",
     "moment": "^2.30.1",

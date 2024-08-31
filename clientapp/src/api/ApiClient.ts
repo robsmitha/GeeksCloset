@@ -38,7 +38,7 @@ class ApiClient {
         errors: undefined,
         data: response.data,
         success: true,
-        statusCode: response.statusCode
+        statusCode: response.status
       }
     }
 
@@ -67,7 +67,7 @@ class ApiClient {
         errors: errors,
         data: undefined,
         success: false,
-        statusCode: response.statusCode
+        statusCode: response.status
       }
   }
 

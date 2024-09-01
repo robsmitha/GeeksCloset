@@ -8,28 +8,36 @@
     />
     <SaveCardDialog
         :open="dialog"
-        :loading="dialogLoading"
+        :loading="loading"
         :item="selectedCard"
         @close="dialog = false"
         @save="saveCard"
         @delete-image="deleteCardImage"
     />
     
-    <v-snackbar
+    <v-dialog
         v-model="snackbar"
+        :max-width="500"
     >
-      {{ errorMessage }}
+        <v-card>
+            <v-card-title class="d-flex justify-space-between align-center">
+                <div>
+                    <v-icon color="red-darken-3" size="small">mdi-alert</v-icon>
+                    <span class="ml-2">Request Failed</span>
+                </div>
 
-      <template v-slot:actions>
-        <v-btn
-          color="white"
-          variant="text"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+                <v-btn
+                  icon="mdi-close"
+                  variant="text"
+                  @click="snackbar = false"
+                ></v-btn>
+              </v-card-title>
+              <v-divider />
+              <v-card-text class="pt-2">
+                {{ errorMessage }}
+              </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -40,7 +48,7 @@ import apiClient from '@/api/elysianClient'
 
 const router = useRouter()
 const dialog = ref(false)
-const dialogLoading = ref(false)
+const loading = ref(false)
 const selectedCard = ref<any | undefined>()
 const snackbar = ref(false)
 const errorMessage = ref('')
@@ -77,7 +85,7 @@ function viewCard(serialNumber: string) {
 }
 
 async function editCard(productId: number) {
-    dialogLoading.value = true
+    loading.value = true
     dialog.value = true
 
     const response = await apiClient.getData(`/api/GetProduct?productId=${productId}`)
@@ -99,7 +107,7 @@ async function editCard(productId: number) {
         grade: data.product.grade,
         images: data.images
     }
-    dialogLoading.value = false
+    loading.value = false
 }
 
 async function deleteCard(productId: number) {
@@ -120,7 +128,7 @@ async function deleteCard(productId: number) {
 }
 
 async function deleteCardImage(productImageId: number){
-    dialogLoading.value = true
+    loading.value = true
     const response = await apiClient.postData('/api/DeleteProductImage', { productImageId })
     
     if(!response.success){
@@ -131,7 +139,7 @@ async function deleteCardImage(productImageId: number){
         }
         snackbar.value = true
     }
-    dialogLoading.value = false
+    loading.value = false
 
     if (!response.data.success) {
         errorMessage.value = 'Could not delete card'
@@ -168,7 +176,7 @@ async function uploadFile(file: File) {
 }
 
 async function saveCard(form: any) {
-    dialogLoading.value = true
+    loading.value = true
     const images: any = []
     for(let i = 0; i < form.files.length; i++) {
         const image = await uploadFile(form.files[i])
@@ -190,11 +198,11 @@ async function saveCard(form: any) {
             errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
-        dialogLoading.value = false
+        loading.value = false
         return
     }
     selectedCard.value = undefined
-    dialogLoading.value = false
+    loading.value = false
     dialog.value = false
 
     if (response.data.productId) {

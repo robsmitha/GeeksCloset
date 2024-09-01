@@ -4,27 +4,37 @@
         :loading="loading"
         @input="term = $event"
         @search="searchBySerialNumber" 
+        @clear="clear"
     />
     <ViewCard 
         :card="card" 
         :images="sasUris" 
         :loading="loading" 
     />
-    <v-snackbar
+    
+    <v-dialog
         v-model="snackbar"
+        :max-width="500"
     >
-      {{ errorMessage }}
+        <v-card>
+            <v-card-title class="d-flex justify-space-between align-center">
+                <div>
+                    <v-icon color="blue-darken-3" size="small">mdi-information</v-icon>
+                    <span class="ml-2">Card Not Found</span>
+                </div>
 
-      <template v-slot:actions>
-        <v-btn
-          color="white"
-          variant="text"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+                <v-btn
+                  icon="mdi-close"
+                  variant="text"
+                  @click="snackbar = false"
+                ></v-btn>
+              </v-card-title>
+              <v-divider />
+              <v-card-text class="pt-2">
+                {{ errorMessage }}
+              </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -69,6 +79,11 @@ async function searchBySerialNumber(){
     card.value = response?.data?.product
     sasUris.value = response?.data?.imageUris
     loading.value = false
+}
+
+function clear(){
+    card.value = null
+    sasUris.value = []
 }
 </script>
   

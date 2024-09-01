@@ -1,5 +1,5 @@
 <template>
-    <v-sheet color="grey-lighten-4" class="py-3">
+    <v-sheet class="pt-3">
       <v-container>
         <v-row>
             <v-col>
@@ -22,9 +22,21 @@
                 persistent-hint
                 :readonly="loading"
                 :loading="loading"
+                clearable
+                @click:clear="emit('clear')"
                 @click:append-inner="emit('search', search)"
                 @keypress.enter="emit('search', search)"
+                rounded="0"
             ></v-text-field>
+
+            <v-btn
+              class="mt-3"
+              variant="tonal"
+              :disabled="loading"
+              :block="$vuetify.display.mobile"
+              @click="emit('search', search)">
+              Search
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>

@@ -1,7 +1,7 @@
 <template>
-    <v-sheet color="grey-lighten-4">
+    <v-sheet color="grey-darken-4">
         <v-container>
-            <v-footer color="grey-lighten-4">
+            <v-footer color="grey-darken-4">
                 <v-row>
                     <v-col>
                         <v-icon>mdi-flask</v-icon>

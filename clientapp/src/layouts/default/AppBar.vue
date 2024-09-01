@@ -29,7 +29,7 @@
         temporary
     >
       <v-list density="compact" nav>
-        <v-list-item prepend-icon="mdi-home-roof" title="Home" value="home" to="/"></v-list-item>
+        <v-list-item prepend-icon="mdi-flask" title="Home" value="home" to="/"></v-list-item>
         <v-list-item prepend-icon="mdi-magnify" title="Find Card" value="search" to="/search"></v-list-item>
 
         <v-list-item subtitle="External Links"></v-list-item>

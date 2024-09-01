@@ -1,9 +1,9 @@
 <template>
-  <v-sheet color="grey-lighten-4" class="pt-3">
+  <v-sheet class="pt-3">
     <v-container>
       <v-row>
         <v-col md="8" cols="12">
-          <template v-if="!home">
+          <template v-if="!homePage">
             <v-skeleton-loader
               type="article"
               color="transparent"
@@ -18,16 +18,20 @@
           <template v-else>
             <v-card color="transparent" flat>
               <v-card-title>Geeks Closet</v-card-title>
-              <v-card-subtitle v-html="home.title.rendered"></v-card-subtitle>
-              <v-card-text v-html="home.content.rendered"></v-card-text>
+              <v-card-subtitle>
+                <span v-html="homePage.title.rendered"></span>
+              </v-card-subtitle>
+              <v-card-text>
+                <span v-html="homePage.content.rendered"></span>
+              </v-card-text>
               <v-card-actions>
-                <v-btn to="/search">Find Card by Serial Number</v-btn>
+                <v-btn to="/search" variant="tonal" :block="$vuetify.display.mobile">Search by Serial Number</v-btn>
               </v-card-actions>
             </v-card>
           </template>
         </v-col>
         <v-col md="4" cols="12">
-          <template v-if="!about">
+          <template v-if="!aboutPage">
             <v-skeleton-loader
               type="article"
               color="transparent"
@@ -41,7 +45,9 @@
           </template>
           <template v-else>
             <v-card color="transparent" flat>
-              <v-card-text v-html="about.content.rendered"></v-card-text>
+              <v-card-text>
+                <span v-html="aboutPage.content.rendered"></span>
+              </v-card-text>
             </v-card>
           </template>
         </v-col>
@@ -51,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useAppStore } from "@/store/app";
 import { storeToRefs } from 'pinia'
 
@@ -59,6 +65,4 @@ const emit = defineEmits(['search', 'clear'])
 const appStore = useAppStore();
 const { homePage, aboutPage } = storeToRefs(appStore)
 
-const home = ref(homePage)
-const about = ref(aboutPage)
 </script>

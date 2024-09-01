@@ -1,5 +1,5 @@
 <template>
-    <v-sheet color="grey-lighten-4" class="pb-3">
+    <v-sheet color="grey-darken-4" class="pb-3">
         <v-container>
             <v-card color="transparent"  title="Services" subtitle="Try them out!" flat>
                 <v-card-text>
@@ -15,6 +15,7 @@
                                     :href="f.href"
                                     :target="f.href ? '_blank': ''"
                                     :prepend-icon="f.icon"
+                                    rounded="0"
                                     hover>
                                 </v-card>
                             </v-col>
@@ -30,6 +31,14 @@
 
 const features = [
     {
+        title: 'Card Search',
+        subtitle: 'Find a card by serial number',
+        text: 'Look up a card by serial number to view images, grade, and notes.',
+        to: '/search',
+        icon: 'mdi-certificate-outline',
+        enabled: true
+    },
+    {
         title: 'Buy Online',
         subtitle: 'Merchandise at the best price',
         text: 'Comic Books, Anime Manga, Video Games and Funko Pops.',
@@ -38,15 +47,7 @@ const features = [
         enabled: true
     },
     {
-        title: 'Find Card',
-        subtitle: 'Search by serial number',
-        text: 'Look up a card by serial number to view images, grade, and notes.',
-        to: '/search',
-        icon: 'mdi-certificate-outline',
-        enabled: true
-    },
-    {
-        title: 'In-Store',
+        title: 'Visit In-Store',
         subtitle: 'New Location',
         text: 'Get directions to visit our Tallahassee store.',
         href: 'https://maps.app.goo.gl/mPUTjdGnsoH4k5L88',

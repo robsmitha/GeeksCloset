@@ -9,6 +9,7 @@
         <v-toolbar color="black">
             <v-btn
                 icon="mdi-close"
+                :disabled="loading"
                 @click="dialog = false"
             ></v-btn>
             <v-toolbar-title>
@@ -16,6 +17,7 @@
             </v-toolbar-title>
 
             <v-btn
+                :disabled="loading"
                 @click="onSave"
             >
               Save
@@ -23,8 +25,20 @@
         </v-toolbar>
         <v-card-text class="pa-0">
             <template v-if="loading">
-                <v-skeleton-loader color="grey-lighten-4 pa-0" type="paragraph">
-                </v-skeleton-loader>
+              <v-container class="fill-height">
+                <v-row align="center" justify="center">
+                  <v-col cols="auto" class="text-center">
+                    <v-progress-circular
+                      indeterminate
+                      :size="70"
+                      :width="5"    
+                    ></v-progress-circular>
+                    <div class="mt-5 text-h5">
+                      Loading, please wait..
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-container>
             </template>
             <template v-else>
                 <v-container fluid>

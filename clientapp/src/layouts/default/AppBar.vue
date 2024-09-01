@@ -10,12 +10,12 @@
       <template #prepend>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
-      <v-app-bar-title class="text-uppercase font-weight-medium">
-        <span v-if="!$vuetify.display.mobile">
+      <v-app-bar-title>
+        <span v-if="!$vuetify.display.mobile" class="text-uppercase">
           Geeks Closet Grading
         </span>
-        <span v-else>
-          GCG
+        <span  class="text-uppercase text-subtitle-1" v-else>
+          Geeks Closet
         </span>
       </v-app-bar-title>
       <v-spacer />

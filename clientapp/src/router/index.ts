@@ -8,6 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import search from '@/pages/search.vue'
+import { RouteLocationNormalized } from 'vue-router';
 const routes = [
   {
     path: '/search/:serialNumber?',
@@ -25,6 +26,11 @@ const router = createRouter({
       ...extendedRoutes,
       ...routesRoutes
     ];
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  scrollBehavior(to: RouteLocationNormalized, from: RouteLocationNormalized, savedPosition: null | { left: number, top: number }) {
+    // always scroll to top
+    return { top: 0 }
   },
 })
 

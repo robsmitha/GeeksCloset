@@ -2,24 +2,19 @@
 using Elysian.Application.Features.Merchants.Commands;
 using Elysian.Application.Features.Merchants.Models;
 using Elysian.Application.Features.Merchants.Queries;
-using Elysian.Application.Interfaces;
-using Elysian.Infrastructure.Context;
 using ElysianFunctions.Middleware;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace ElysianFunctions
 {
-    public class ProductFunctions(ILogger<ProductFunctions> logger, ElysianContext context, IClaimsPrincipalAccessor claimsPrincipalAccessor, 
-        IMediator mediator)
+    public class ProductFunctions(IMediator mediator)
     {
         [Function("GetProducts")]
         public async Task<HttpResponseData> GetProducts([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
-            var products = await context.Products.Where(c => !c.IsDeleted).ToListAsync();
+            var products = await mediator.Send(new GetProductsQuery());
             return await req.WriteJsonResponseAsync(products);
         }
 
@@ -30,8 +25,6 @@ namespace ElysianFunctions
             {
                 throw new CustomValidationException();
             }
-
-            logger.LogInformation("Get Product by Id request [ProductId: {productId}]", productId);
 
             var (product, images) = await mediator.Send(new GetProductQuery(productId));
 
@@ -48,8 +41,6 @@ namespace ElysianFunctions
         public async Task<HttpResponseData> GetProductBySerialNumber([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
             var serialNumber = req.Query["serialNumber"];
-
-            logger.LogInformation("Get Product By Serial Number request [SerialNumber: {serialNumber}]", serialNumber);
 
             var (product, imageUris) = await mediator.Send(new GetProductBySerialNumberQuery(serialNumber));
 
@@ -75,7 +66,6 @@ namespace ElysianFunctions
         public async Task<HttpResponseData> DeleteProduct([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
         {
             var deleteProduct = await req.DeserializeBodyAsync<DeleteProductRequest>();
-            logger.LogInformation("Delete Product by Id request [ProductId: {productId}]", deleteProduct.ProductId);
 
             await mediator.Send(new DeleteProductCommand(deleteProduct.ProductId));
 
@@ -91,7 +81,6 @@ namespace ElysianFunctions
         public async Task<HttpResponseData> DeleteProductImage([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
         {
             var deleteProductImage = await req.DeserializeBodyAsync<DeleteProductImageRequest>();
-            logger.LogInformation("Delete Product Image by Id request [CardImageId: {CardImageId}]", deleteProductImage.ProductImageId);
 
             await mediator.Send(new DeleteProductImageCommand(deleteProductImage.ProductImageId));
 

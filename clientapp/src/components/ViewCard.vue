@@ -1,6 +1,6 @@
 <template>
     <v-sheet class="pb-3">
-        <v-container v-if="loading">
+        <v-container v-if="loading" class="mt-3">
             <v-row align="center" justify="center">
                 <v-col cols="auto" class="text-center">
                 <v-progress-circular
@@ -43,11 +43,11 @@
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col v-for="(url, index) in cardImages" :key="index" cols="12" md="4">    
+                    <v-col v-for="(url, index) in cardImages" :key="index" cols="6" md="3">    
                         <v-card :href="url" target="_blank">
                             <v-img 
                                 :src="url" 
-                                height="300px" 
+                                :height="!$vuetify.display.mobile ? '300px' : '150px'" 
                                 cover
                                 :aspect-ratio="1"
                                 class="bg-grey-lighten-2">

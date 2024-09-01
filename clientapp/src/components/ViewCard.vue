@@ -18,7 +18,7 @@
             <template v-if="!cardDetails">
                 <v-row>
                     <v-col>
-                        <span v-html="findCardPage?.content.rendered">
+                        <span v-html="findCardPage?.content">
                         </span>
                     </v-col>
                 </v-row>

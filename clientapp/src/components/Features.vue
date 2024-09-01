@@ -32,24 +32,24 @@
 const features = [
     {
         title: 'Card Search',
-        subtitle: 'Find a card by serial number',
-        text: 'Look up a card by serial number to view images, grade, and notes.',
+        subtitle: 'Find Your Card Instantly',
+        text: 'Quickly locate your card using its unique serial number. View detailed information, including images, grade, and notes.',
         to: '/search',
         icon: 'mdi-certificate-outline',
         enabled: true
     },
     {
-        title: 'Buy Online',
+        title: 'Discover Amazing Deals',
         subtitle: 'Merchandise at the best price',
-        text: 'Comic Books, Anime Manga, Video Games and Funko Pops.',
+        text: 'Explore our vast collection of Comic Books, Anime Manga, Video Games, and Funko Pops. Enjoy unbeatable prices and convenient online shopping.',
         href: 'https://www.ebay.com/str/bemysalesman',
         icon: 'mdi-shopping-outline',
         enabled: true
     },
     {
-        title: 'Visit In-Store',
-        subtitle: 'New Location',
-        text: 'Get directions to visit our Tallahassee store.',
+        title: 'Visit Our Store',
+        subtitle: 'New Location Open Now',
+        text: 'Get directions to our Tallahassee store and immerse yourself in our exciting collection. Discover new treasures and connect with other enthusiasts.',
         href: 'https://maps.app.goo.gl/mPUTjdGnsoH4k5L88',
         icon: 'mdi-store',
         enabled: true

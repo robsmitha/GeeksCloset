@@ -19,10 +19,10 @@
             <v-card color="transparent" flat>
               <v-card-title>Geeks Closet</v-card-title>
               <v-card-subtitle>
-                <span v-html="homePage.title.rendered"></span>
+                <span v-html="homePage.title"></span>
               </v-card-subtitle>
               <v-card-text>
-                <span v-html="homePage.content.rendered"></span>
+                <span v-html="homePage.content"></span>
               </v-card-text>
               <v-card-actions>
                 <v-btn to="/search" variant="tonal" :block="$vuetify.display.mobile">Search by Serial Number</v-btn>
@@ -46,7 +46,7 @@
           <template v-else>
             <v-card color="transparent" flat>
               <v-card-text>
-                <span v-html="aboutPage.content.rendered"></span>
+                <span v-html="aboutPage.content"></span>
               </v-card-text>
             </v-card>
           </template>

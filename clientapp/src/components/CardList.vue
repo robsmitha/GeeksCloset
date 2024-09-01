@@ -70,8 +70,8 @@
                                             </v-icon>
                                         </v-btn>
                                     </template>
-                                    <template v-if="header.key === 'ModifiedAt'">
-                                        {{ new Date(getNestedValue(item, header.key)).toLocaleDateString() }}
+                                    <template v-if="header.key === 'createdAt'">
+                                        {{ $filters.formatDate(getNestedValue(item, header.key)) }}
                                     </template>
                                     <template v-else>
                                         {{ getNestedValue(item, header.key!.toString()) }}
@@ -89,6 +89,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { VDataTable } from 'vuetify/components'
+import { useDateFilter } from '@/filters/dateFilter'
+
+const { dateFilter } = useDateFilter()
 
 type ReadonlyHeaders = VDataTable['$props']['headers']
 
@@ -116,8 +119,8 @@ const headers: ReadonlyHeaders = [
         key: 'description',
     },
     {
-        title: 'Modified',
-        key: 'modifiedAt'
+        title: 'Created',
+        key: 'createdAt'
     },
     {
         title: '',

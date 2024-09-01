@@ -14,11 +14,6 @@ namespace ElysianFunctions
         [Function("GenerateSasToken")]
         public async Task<HttpResponseData> GenerateSasToken([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
-            if (!claimsPrincipalAccessor.IsAuthenticated)
-            {
-                throw new ForbiddenAccessException();
-            }
-
             var fileName = req.Query["fileName"] ?? throw new CustomValidationException();
 
             var response = await mediatr.Send(new GenerateSasTokenQuery(fileName));

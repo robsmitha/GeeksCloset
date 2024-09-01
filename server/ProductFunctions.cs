@@ -1,5 +1,6 @@
 ﻿using Elysian.Application.Exceptions;
 using Elysian.Application.Features.Merchants.Commands;
+using Elysian.Application.Features.Merchants.Models;
 using Elysian.Application.Features.Merchants.Queries;
 using Elysian.Application.Interfaces;
 using Elysian.Infrastructure.Context;
@@ -18,11 +19,6 @@ namespace ElysianFunctions
         [Function("GetProducts")]
         public async Task<HttpResponseData> GetProducts([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
-            if (!claimsPrincipalAccessor.IsAuthenticated)
-            {
-                throw new ForbiddenAccessException();
-            }
-
             var products = await context.Products.Where(c => !c.IsDeleted).ToListAsync();
             return await req.WriteJsonResponseAsync(products);
         }
@@ -30,11 +26,6 @@ namespace ElysianFunctions
         [Function("GetProduct")]
         public async Task<HttpResponseData> GetProduct([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
-            if (!claimsPrincipalAccessor.IsAuthenticated)
-            {
-                throw new ForbiddenAccessException();
-            }
-
             if (!int.TryParse(req.Query["productId"], out var productId))
             {
                 throw new CustomValidationException();
@@ -74,11 +65,6 @@ namespace ElysianFunctions
         [Function("SaveProduct")]
         public async Task<HttpResponseData> SaveProduct([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
         {
-            if (!claimsPrincipalAccessor.IsAuthenticated)
-            {
-                throw new ForbiddenAccessException();
-            }
-
             var saveProduct = await req.DeserializeBodyAsync<SaveProductRequest>();
             var product = await mediator.Send(new SaveProductCommand(saveProduct));
 
@@ -88,11 +74,6 @@ namespace ElysianFunctions
         [Function("DeleteProduct")]
         public async Task<HttpResponseData> DeleteProduct([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
         {
-            if (!claimsPrincipalAccessor.IsAuthenticated)
-            {
-                throw new ForbiddenAccessException();
-            }
-
             var deleteProduct = await req.DeserializeBodyAsync<DeleteProductRequest>();
             logger.LogInformation("Delete Product by Id request [ProductId: {productId}]", deleteProduct.ProductId);
 
@@ -109,11 +90,6 @@ namespace ElysianFunctions
         [Function("DeleteProductImage")]
         public async Task<HttpResponseData> DeleteProductImage([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
         {
-            if (!claimsPrincipalAccessor.IsAuthenticated)
-            {
-                throw new ForbiddenAccessException();
-            }
-
             var deleteProductImage = await req.DeserializeBodyAsync<DeleteProductImageRequest>();
             logger.LogInformation("Delete Product Image by Id request [CardImageId: {CardImageId}]", deleteProductImage.ProductImageId);
 

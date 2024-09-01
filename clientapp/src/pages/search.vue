@@ -58,22 +58,16 @@ async function searchBySerialNumber(){
     loading.value = true
     const response = await apiClient.getData(`/api/GetProductBySerialNumber?serialNumber=${term.value}`)
     if(!response.success){
-        switch (response.statusCode) {
-            case 400:
-                errorMessage.value = 'Please provide a serial number to search.'
-                break
-            case 404:
-                errorMessage.value = 'A GCG card was not found with the provided serial number.'
-                break
-            default:
-                errorMessage.value = 'An error occurred searching. Please try again later.'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred searching. Please try again later.'
         }
         snackbar.value = true
     }
 
-    card.value = response.data.product
-    sasUris.value = response.data.imageUris
+    card.value = response?.data?.product
+    sasUris.value = response?.data?.imageUris
     loading.value = false
 }
 </script>

@@ -61,10 +61,10 @@ async function getCards(){
     const response = await apiClient.getData('/api/GetProducts')
     
     if(!response.success){
-        switch (response.statusCode) {
-            default:
-                errorMessage.value = 'Error getting cards. Please try again later.'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
     }
@@ -82,10 +82,10 @@ async function editCard(productId: number) {
 
     const response = await apiClient.getData(`/api/GetProduct?productId=${productId}`)
     if(!response.success){
-        switch (response.statusCode) {
-            default:
-                errorMessage.value = 'Error getting card. Please try again later.'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
     }
@@ -106,10 +106,10 @@ async function deleteCard(productId: number) {
     const response = await apiClient.postData('/api/DeleteProduct', { productId })
     
     if(!response.success){
-        switch (response.statusCode) {
-            default:
-                errorMessage.value = 'Could not delete card'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
     }
@@ -124,10 +124,10 @@ async function deleteCardImage(productImageId: number){
     const response = await apiClient.postData('/api/DeleteProductImage', { productImageId })
     
     if(!response.success){
-        switch (response.statusCode) {
-            default:
-                errorMessage.value = 'Could not delete card image'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
     }
@@ -143,10 +143,10 @@ async function uploadFile(file: File) {
     const response = await apiClient.getData(`/api/GenerateSasToken?fileName=${file.name}`)
     
     if(!response.success){
-        switch (response.statusCode) {
-            default:
-                errorMessage.value = 'Could not upload file'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
         return null
@@ -184,12 +184,13 @@ async function saveCard(form: any) {
     })
     
     if(!response.success){
-        switch (response.statusCode) {
-            default:
-                errorMessage.value = 'Could not save card'
-                break
+        if(response.errorMessage){
+            errorMessage.value = response.errorMessage
+        } else {
+            errorMessage.value = 'An error occurred. Please try again later.'
         }
         snackbar.value = true
+        dialogLoading.value = false
         return
     }
     selectedCard.value = undefined

@@ -115,7 +115,7 @@
                           color="primary"
                           @click:close="onDeleteImage(i.productImageId)"
                         >
-                        {{ i.FileName }}
+                        {{ i.fileName }}
                       </v-chip>
                     </v-col>
                   </v-row>

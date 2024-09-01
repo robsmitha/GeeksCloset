@@ -87,8 +87,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { VDataTable } from 'vuetify/components'
+import { useDisplay } from 'vuetify'
+
+const { mobile } = useDisplay()
 import { useDateFilter } from '@/filters/dateFilter'
 
 const { dateFilter } = useDateFilter()
@@ -101,34 +104,53 @@ const props = defineProps({
 const emit = defineEmits(['view', 'create', 'delete', 'edit'])
 const search = ref('')
 
-const headers: ReadonlyHeaders = [
-    {
-        title: 'Name',
-        key: 'name',
-    },
-    {
-        title: 'Serial #',
-        key: 'serialNumber',
-    },
-    {
-        title: 'Grade',
-        key: 'grade',
-    },
-    {
-        title: 'Description',
-        key: 'description',
-    },
-    {
-        title: 'Created',
-        key: 'createdAt'
-    },
-    {
-        title: '',
-        key: '',
-        sortable: false,
-        align: 'end'
-    }
-]
+const isMobile = computed(() => mobile.value);
+
+const headers: ReadonlyHeaders = isMobile.value
+    ? [
+        {
+            title: 'Name',
+            key: 'name',
+        },
+        {
+            title: 'Serial #',
+            key: 'serialNumber',
+        },
+        {
+            title: '',
+            key: '',
+            sortable: false,
+            align: 'end'
+        }
+    ] 
+    : [
+        {
+            title: 'Name',
+            key: 'name',
+        },
+        {
+            title: 'Serial #',
+            key: 'serialNumber',
+        },
+        {
+            title: 'Grade',
+            key: 'grade',
+        },
+        {
+            title: 'Description',
+            key: 'description'
+        },
+        {
+            title: 'Created',
+            key: 'createdAt'
+        },
+        {
+            title: '',
+            key: '',
+            sortable: false,
+            align: 'end'
+        }
+    ]
 
 function filter (value: string, query: string, item: any) {
     const upperCaseQuery = query.toLocaleUpperCase()
